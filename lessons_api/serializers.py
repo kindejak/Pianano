@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MusicLesson, Question
+from .models import MusicLesson, Question, Student
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +16,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'name','teacher', 'type', 'question_json')
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ( 'name', 'surname', 'nickname', 'login',  'password_hash')
