@@ -16,6 +16,8 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd Pianano
+          git stash
+          git stash drop
           git pull
           echo "DEBUG=False" > .env
           echo "ALLOWED_HOSTS=.kindejak.cz" >> .env
