@@ -24,4 +24,4 @@ jobs:
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET }}" >> .env
           sudo docker-compose up -d --build
           ls -al
-          echo "Done"
+          echo "done"
