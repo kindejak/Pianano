@@ -16,9 +16,12 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd Pianano
+          git stash
+          git stash drop
           git pull
           echo "DEBUG=False" > .env
           echo "ALLOWED_HOSTS=.kindejak.cz" >> .env
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET }}" >> .env
           sudo docker-compose up -d --build
           ls -al
+          echo "Done"
