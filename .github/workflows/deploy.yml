@@ -22,6 +22,7 @@ jobs:
           echo "DEBUG=False" > .env
           echo "ALLOWED_HOSTS=.kindejak.cz" >> .env
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET }}" >> .env
+          echo "DJANGO_LOG_LEVEL=DEBUG" >> .env
           sudo docker-compose up -d --build
           ls -al
           echo "done"
