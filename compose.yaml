@@ -18,10 +18,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./db:/db
+      - db-data:/app/db
 
 volumes:
   db-data:
+    driver: local
 
 networks:
   default:
