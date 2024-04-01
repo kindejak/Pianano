@@ -29,6 +29,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # only if you are using https
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# that's why we are using .env file to set this variable
 DEBUG = json.loads(os.getenv("DEBUG").lower())
 
 ALLOWED_HOSTS = ["localhost",os.getenv("ALLOWED_HOSTS")]
