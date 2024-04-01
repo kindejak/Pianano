@@ -1,3 +1,5 @@
+
+"""
 from django.shortcuts import render
 from .forms import StudentForm
 
@@ -22,3 +24,5 @@ class createStudentForm(View):
             form.save()
         self.context['form'] = form
         return render(request, 'create_student.html', self.context)
+
+"""

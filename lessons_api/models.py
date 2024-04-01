@@ -1,19 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 # Create your models here.
+# token
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
 
 class Student(models.Model):
-    name = models.CharField(max_length=50, blank=True)
-    surname = models.CharField(max_length=50, blank=True)
-    nickname = models.CharField(max_length=50, unique=True)
-    login = models.CharField(max_length=50, unique=True, blank=True)
-    password_hash = models.CharField(max_length=40, blank=True) # sha1
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    streak = models.IntegerField(default=0)
     xp = models.IntegerField(default=0)
 
   
 class Question(models.Model):
     QUESTION_TYPES = [
-        ('NI','Note idetification')
+        ('NI','Note idetification'),
+        ('CI','Chord idetification'),
+        ('PN', 'Play note'),
+        ('PC', 'Play chord')
     ]
     name = models.CharField(max_length=50)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import MusicLesson, Question, Student
 
+
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = MusicLesson
@@ -20,4 +21,4 @@ class QuestionSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ( 'name', 'surname', 'nickname', 'login',  'password_hash')
+        fields = ( 'name', 'user', 'nickname', 'login',  'password_hash')

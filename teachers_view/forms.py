@@ -1,6 +1,7 @@
 from lessons_api.models import Student
 from django import forms
 
+"""
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
@@ -11,3 +12,4 @@ class StudentForm(forms.ModelForm):
 
     def __str__(self):
         return self.nickname
+"""
