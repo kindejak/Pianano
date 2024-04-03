@@ -1,28 +1,47 @@
 
-"""
 from django.shortcuts import render
-from .forms import StudentForm
 
 from django.views import View
 
-# Create your views here.
+from  .forms import CreateLessonForm, LoginForm
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
-# create a student view
-class createStudentForm(View):
-    context ={}
+@login_required(login_url="/teacher/login/")
+def hello(request):
+    return render(request, 'base.html')
 
-    def get(self, request):
-        form = StudentForm()
-        self.context['form'] = form
-        #self.context['detail'] = StudentForm.objects.all()
-        return render(request, 'create_student.html', self.context)
+@login_required(login_url="/teacher/login/")
+def edit_lesson(request):
+    form = CreateLessonForm()
 
-    def post(self, request):
-        form = StudentForm(request.POST or None)
+    if request.method == 'POST':
+        form = CreateLessonForm(request.POST)
         if form.is_valid():
             form.save()
-        self.context['form'] = form
-        return render(request, 'create_student.html', self.context)
+            return render(request, 'base.html')
+    
+    context = {'form': form}
+    return render(request, 'edit_lesson.html', context)
 
-"""
+def login_page(request):
+    form = LoginForm()
+    user = None
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect to dashboard
+            else:
+                return render(request, 'login.html', {'form': form, 'error': 'Invalid username or password'})
+    elif request.method == 'GET':
+        return render(request, 'login.html', {'form': form})
+    else:
+        return render(request, 'login.html')
+            
+

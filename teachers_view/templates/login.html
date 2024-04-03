@@ -1,0 +1,53 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Login to Pianano for teachers{% endblock %}</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Other common CSS and JavaScript imports can go here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href={% static "dashboard.css" %}>
+     <!-- custom CSS for container around login form -->
+    <style>
+        .container {
+            margin-top: 100px;
+            background-color: #87a2b9;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 550px;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .container input {
+            background-color: #4e657a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2>Pianano for teachers</h1>
+                <div class="form-group">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.username|as_crispy_field }}
+                        {{ form.password|as_crispy_field }}
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+            </div>
+        </div>
+    </div>
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>

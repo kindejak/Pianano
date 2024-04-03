@@ -1,15 +1,14 @@
-from lessons_api.models import Student
+from lessons_api.models import MusicLesson, Question, Student
+from django.contrib.auth.models import User
 from django import forms
 
-"""
-class StudentForm(forms.ModelForm):
+class CreateLessonForm(forms.ModelForm):
     class Meta:
-        model = Student
-        fields = ['name', 'surname', 'nickname', 'login', 'password_hash']
-        widgets = {
-            'password_hash': forms.PasswordInput(),
-        }
+        model = MusicLesson
+        fields = ['name', 'questions', 'xp', 'is_public']
 
-    def __str__(self):
-        return self.nickname
-"""
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    

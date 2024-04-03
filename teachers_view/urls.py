@@ -1,8 +1,12 @@
 from django.urls import path
-# from .views import createStudentForm
-"""
+from .views import hello, edit_lesson, login_page
+
 urlpatterns = [
-    path('create_student.html', createStudentForm.as_view(), name='create_student'),
+    path('', hello),
+    path('edit_lesson/', edit_lesson),
+    path('dashboard/', hello, name='dashboard'),
+    path('lessons/', edit_lesson, name='lessons'),
+    path('students/', hello, name='students'),
+    path('settings/', hello, name='settings'),
+    path('login/', login_page),
 ]
-"""
-urlpatterns = []
