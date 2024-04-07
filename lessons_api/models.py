@@ -13,9 +13,12 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='students')
     streak = models.IntegerField(default=0)
     xp = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.user.username}'
   
 class Question(models.Model):
     QUESTION_TYPES = [
@@ -61,7 +64,8 @@ class StudentLesson(models.Model):
     answerd_questions = models.IntegerField(default=0)
     right_answers = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
+    date_finished = models.DateTimeField(null=True)
     deadline = models.DateTimeField(null=True)
 
     def __str__(self):
-        return f'{self.student.nickname} - {self.music_lesson.name} - {self.music_lesson.teacher.username}'
+        return f'{self.student.user.username} - {self.music_lesson.name} - {self.music_lesson.teacher.username}'

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+    <h1>Edit Lesson</h1>
+    {% if messages %}
+    {% for message in messages %}
+     {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.username|as_crispy_field }}
+        {{ form.email|as_crispy_field}}
+        {{ form.first_name|as_crispy_field}}
+        {{ form.last_name|as_crispy_field}}
+        
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+{% endblock %}

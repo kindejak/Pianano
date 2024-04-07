@@ -7,6 +7,11 @@ html {
     background-color: #4e657a;
     overflow-x: hidden;
   }
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
   a {
     transition: all 0.3s ease;
   }
