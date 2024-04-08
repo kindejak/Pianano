@@ -13,6 +13,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    avatar_id = models.IntegerField(default=0)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='students')
     streak = models.IntegerField(default=0)
     xp = models.IntegerField(default=0)

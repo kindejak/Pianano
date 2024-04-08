@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from .models import MusicLesson, Question, Student
@@ -67,7 +67,7 @@ class QuestionAPIView(generics.ListAPIView):
     serializer_class = QuestionSerializer
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def students_time_spent(request):
     # get all that belong to the teacher
@@ -84,7 +84,7 @@ def students_time_spent(request):
     return Response(student_time)
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def students_xp(request):
     # get all that belong to the teacher
@@ -104,7 +104,7 @@ def students_xp(request):
     return Response(xp)
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def students_lessons_finished(request):
     # get all that belong to the teacher
@@ -116,3 +116,23 @@ def students_lessons_finished(request):
         lessons_finished = student.studentlesson_set.filter(is_finished=True).count()
         lessons.append({'student':student.user.username, 'lessons_finished':lessons_finished})
     return Response(lessons)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])      
+def get_self(request):
+    user = request.user
+    student = Student.objects.get(user=user)
+    return Response({'username':user.username, 'email':user.email, 'xp':student.xp, 'streak':student.streak})
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])  
+def get_students(request):
+    teacher = request.user
+    students = Student.objects.filter(teacher=teacher)
+    student_array = []
+    for student in students:
+        student_array.append({'username':student.user.username, 'email':student.user.email, 'xp':student.xp, 'streak':student.streak})
+    return Response(student_array)

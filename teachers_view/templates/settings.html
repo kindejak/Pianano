@@ -4,7 +4,11 @@
 {% block title %}Settings{% endblock %}
 
 {% block content %}
-    <h1>Edit Lesson</h1>
+    <h1>Settings</h1>
+    <h2>Password</h2>
+    <a href="/accounts/password_change/" class="btn btn-primary">Change password</a>
+    <a href="/accounts/password_reset/" class="btn btn-secondary">Reset password</a>
+    <h2>User settings</h2>
     {% if messages %}
     {% for message in messages %}
      {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
@@ -21,4 +25,6 @@
         
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
+    <h2>Danger zone</h2>
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete my account</button>
 {% endblock %}

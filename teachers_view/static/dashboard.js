@@ -78,7 +78,19 @@ $(function() {
 
         }
     });
+});
 
 
 
+var $table = $('#table')
+$(function() {
+    $.ajax({
+        url: '/api/students-from-teacher/',
+        method: 'GET',
+        success: function(data) {
+            console.log(data);
+            table_data = data;
+            $table.bootstrapTable({data: table_data})
+        }
+    });
 });
