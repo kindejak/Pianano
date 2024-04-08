@@ -17,8 +17,6 @@ RUN pip install -r requirements.txt
 COPY . .
 # run to collect static files
 RUN python manage.py collectstatic --noinput
-#run for migrated tables
-RUN python manage.py migrate
 
 CMD ["gunicorn", "Pianano.wsgi"]
 EXPOSE 8000
