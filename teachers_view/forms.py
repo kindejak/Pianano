@@ -7,6 +7,12 @@ class CreateLessonForm(forms.ModelForm):
         model = MusicLesson
         fields = ['name', 'questions', 'xp', 'is_public']
 
+class CreateStudentForm(forms.Form):
+    username = forms.CharField()
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
+    avatar_id = forms.IntegerField()
+
 
 class SettingsForm(forms.ModelForm):
     class Meta:

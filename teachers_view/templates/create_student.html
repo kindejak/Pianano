@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Create Student{% endblock %}
+
+{% block content %}
+    <center>
+        <h1>Create Students</h1>
+    </center>
+    <p></p>
+
+    <div class="col-12 tm-block-col">
+        <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+            <h2 class="tm-block-title">Create student</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.username|as_crispy_field }}
+                {{ form.password1|as_crispy_field }}
+                {{ form.password2|as_crispy_field }}
+                {{ form.avatar_id|as_crispy_field }}
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+<script src={% static "dashboard.js"%}></script>
+{% endblock %}  

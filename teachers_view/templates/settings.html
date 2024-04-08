@@ -26,5 +26,5 @@
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
     <h2>Danger zone</h2>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Delete my account</button>
+    <a class="btn btn-danger" href="./delete" onclick="return confirm('Are you sure?');">Delete my account</a>
 {% endblock %}

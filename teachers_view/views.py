@@ -1,14 +1,15 @@
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.views import View
 
-from  .forms import CreateLessonForm, LoginForm, SettingsForm
+from  .forms import CreateLessonForm, LoginForm, SettingsForm, CreateStudentForm, MusicLesson
 
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.password_validation import validate_password
 
 from lessons_api.models import StudentLesson, Student
 from django.contrib.auth.models import User
@@ -44,30 +45,92 @@ def students(request):
     return render(request, 'students.html')
 
 @login_required(login_url="/teacher/login/")
-def edit_lesson(request):
-    form = CreateLessonForm()
+def create_student(request):
+    form = CreateStudentForm()
 
     if request.method == 'POST':
-        form = CreateLessonForm(request.POST)
+        form = CreateStudentForm(request.POST)
         if form.is_valid():
-            form.save()
-            return render(request, 'base.html')
-    
-    context = {'form': form}
-    return render(request, 'edit_lesson.html', context)
+            username = form.cleaned_data['username']
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            avatar_id = form.cleaned_data['avatar_id']
+            if password1 != password2:
+                return render(request, 'create_student.html', {'form': form, 'error': 'Passwords do not match'})
+            if User.objects.filter(username=username).exists():
+                return render(request, 'create_student.html', {'form': form, 'error': 'Username already exists'})
+            if avatar_id < 0 or avatar_id > 8:
+                return render(request, 'create_student.html', {'form': form, 'error': 'Invalid avatar id'})
+            if validate_password == False:
+                return render(request, 'create_student.html', {'form': form, 'error': 'Password is too weak'})
+            user = User.objects.create_user(username=username, password=password1)
+            student = Student.objects.create(user=user, teacher=request.user, avatar_id=avatar_id)
+            return redirect('students')
+    return render(request, 'create_student.html', {'form': form})
 
 @login_required(login_url="/teacher/login/")
-def create_lesson(request):
+def lesson(request):
+    # get all lessons that belong to the teacher
+    lessons = request.user.musiclesson_set.all()
+    context_lessons = []
+    for lesson in lessons:
+        context_lessons.append({
+            'id': lesson.id,
+            'name': lesson.name,
+            'xp': lesson.xp,
+            'is_public': lesson.is_public,
+        }) 
+    return render(request, 'lesson.html', {'lessons':context_lessons})
+
+@login_required(login_url="/teacher/login/")
+def delete_lesson(request, id=None):
+    if id is None:
+        return redirect('lessons', {'error': 'Invalid id'})
+    if request.user.musiclesson_set.filter(id=id).exists():
+        lesson = MusicLesson.objects.get(id=id)
+        lesson.delete()
+        return redirect('lessons')
+    else:
+        return redirect('lessons', {'error': 'Invalid id'})
+
+@login_required(login_url="/teacher/login/")
+def edit_lesson(request):
+    return render(request, 'edit_lesson.html')
+
+@login_required(login_url="/teacher/login/")
+def create_lesson(request, id=None):
     form = CreateLessonForm()
+    context = {}
+
+    if id is not None and request.method == 'GET':
+        lesson = MusicLesson.objects.get(id=id)
+        form = CreateLessonForm(instance=lesson)
+        context['lesson'] = lesson
+        return render(request, 'create_lesson.html', {'form': form})
+    
+    if id is not None and request.method == 'POST':
+        lesson = MusicLesson.objects.get(id=id)
+        form = CreateLessonForm(request.POST, instance=lesson)
+        if form.is_valid():
+            form.save()
+            return redirect('lessons')
+        else:
+            return render(request, 'create_lesson.html', {'form': form, 'error': 'Invalid data'})
+
+
+    
 
     if request.method == 'POST':
         form = CreateLessonForm(request.POST)
+        # set teacher to the current user
+        form.instance.teacher = request.user
         if form.is_valid():
             form.save()
-            return render(request, 'base.html')
+            return redirect('lessons')
+        else:
+            return render(request, 'create_lesson.html',{'form': form, 'error':'Invalid data'} )
     
-    context = {'form': form}
-    return render(request, 'create_lesson.html', context)
+    return render(request, 'create_lesson.html', {'form': form})
 
 @login_required(login_url="/teacher/login/")
 def settings_page(request):
@@ -83,7 +146,11 @@ def settings_page(request):
         form = SettingsForm(instance=user)
         return render(request, 'settings.html', {'form': form})
 
-
+def delete_account(request):
+    user = request.user
+    if user.is_authenticated:
+        user.delete()
+    return redirect('login-page')
 
 def login_page(request):
     form = LoginForm()
