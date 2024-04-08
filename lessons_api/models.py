@@ -19,7 +19,9 @@ class Student(models.Model):
     xp = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.user.username}'
+        if self.user:
+            return self.user.username
+        return 'None'
   
 class Question(models.Model):
     QUESTION_TYPES = [

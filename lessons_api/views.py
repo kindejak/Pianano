@@ -90,6 +90,8 @@ def students_xp(request):
     # get all that belong to the teacher
     teacher = request.user
     students = Student.objects.filter(teacher=teacher)
+    if students.count() == 0:
+        return Response([])
     # return json with students and xp
     xp = []
     for student in students:
@@ -111,6 +113,8 @@ def students_lessons_finished(request):
     teacher = request.user
     students = Student.objects.filter(teacher=teacher)
     # return json with students and xp
+    if students.count() == 0:
+        return Response([])
     lessons = []
     for student in students:
         lessons_finished = student.studentlesson_set.filter(is_finished=True).count()
@@ -132,6 +136,8 @@ def get_self(request):
 def get_students(request):
     teacher = request.user
     students = Student.objects.filter(teacher=teacher)
+    if students.count() == 0:
+        return Response([])
     student_array = []
     for student in students:
         student_array.append({'username':student.user.username, 'email':student.user.email, 'xp':student.xp, 'streak':student.streak})
