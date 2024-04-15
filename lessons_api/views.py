@@ -18,6 +18,24 @@ from .serializers import LessonSerializer, LessonDetailSerializer, QuestionSeria
 # Create your views here.
 
 
+@api_view(['POST'])
+def update_student_lesson(request):
+    # {"time_spent": time_spent, "answerd_questions": answerd_questions, "right_answers": right_answers, "is_finished": 1,"date_finished":date_finished,"time_finished":time_finished}, headers={"Content-Type": "application/json"})
+    # get student
+    user = request.user
+    student = Student.objects.get(user=user)
+    # get lesson
+    lesson_id = request.data.get('lesson_id')
+    lesson = MusicLesson.objects.get(id=lesson_id)
+    # get student lesson
+    student_lesson = student.studentlesson_set.get(music_lesson=lesson)
+    # update student lesson
+    student_lesson.time_spent = request.data.get('time_spent')
+    student_lesson.answerd_questions = request.data.get('answerd_questions')
+    student_lesson.right_answers = request.data.get('right_answers')
+    student_lesson.is_finished = request.data.get('is_finished')
+    student_lesson.date_finished = request.data.get('date_finished')
+    student_lesson.time_finished = request.data.get('time_finished')
 
 
    

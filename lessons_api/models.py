@@ -28,7 +28,9 @@ class Question(models.Model):
         ('NI','Note idetification'),
         ('CI','Chord idetification'),
         ('PN', 'Play note'),
-        ('PC', 'Play chord')
+        ('PC', 'Play chord'),
+        ('NA','Note audioidetification'),
+        ('CA','Chord audioidetification'),
     ]
     name = models.CharField(max_length=50)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -68,6 +70,7 @@ class StudentLesson(models.Model):
     right_answers = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
     date_finished = models.DateTimeField(null=True)
+    time_finished = models.DateTimeField(null=True)
     deadline = models.DateTimeField(null=True)
 
     def __str__(self):

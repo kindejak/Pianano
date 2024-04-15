@@ -3,7 +3,9 @@
 {% block title %}Edit Lesson{% endblock %}
 
 {% block content %}
-    <h1>Edit Lesson</h1>
+    <center>
+      <h1>Edit Lesson</h1>
+    </center>
     <form method="post">
         {% csrf_token %}
         {{ form.name|as_crispy_field }}
