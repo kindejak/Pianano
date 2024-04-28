@@ -2,9 +2,17 @@ from lessons_api.models import MusicLesson, Question, Student
 from django.contrib.auth.models import User
 from django import forms
 
-class CreateLessonForm(forms.ModelForm):
+
+class CreateQuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['name', 'type', 'question_json']
+
+
+class CreateLessonForm(forms.ModelForm):    
     class Meta:
         model = MusicLesson
+        questions = forms.ModelMultipleChoiceField(queryset=Question.objects.all())
         fields = ['name', 'questions', 'xp', 'is_public']
 
 class CreateStudentForm(forms.Form):

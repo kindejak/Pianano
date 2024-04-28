@@ -1,0 +1,60 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" integrity="sha512-rt/SrQ4UNIaGfDyEXZtNcyWvQeOq0QLygHluFQcSjaGB04IxWhal71tKuzP6K8eYXYB6vJV4pHkXcmFGGQ1/0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.name|as_crispy_field }}
+        {{ form.type|as_crispy_field }}
+        {{ form.question_json|as_crispy_field }}
+        {% if success %}
+            <div class="alert alert-success" role="alert">
+                Question created successfully
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}
+<button class="btn btn-info">Generate example</button>
+<i>Visit documnetation on how to create question_json</i> 
+
+
+<script>
+    $(document).ready(function() {
+        $('.btn-info').click(function() {
+            var examples = [
+                {
+                    "question":"What note is this?",
+                    "options":["A","B","C","D"],
+                    "correct_answer":"A"
+                },
+                {
+                    "question":"What note is this?",
+                    "options":["A","B","C","D"],
+                    "correct_answer":"B"
+                },
+                {
+                    "question":"What note is this?",
+                    "options":["A","B","C","D"],
+                    "correct_answer":"C"
+                },
+                {
+                    "question":"What note is this?",
+                    "options":["A","B","C","D"],
+                    "correct_answer":"D"
+                }
+            ];
+            example = examples[Math.floor(Math.random() * examples.length)];
+            $('#id_question_json').val(JSON.stringify(example));
+        });
+    });
+</script>
+</html>

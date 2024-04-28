@@ -126,7 +126,7 @@ def students_xp(request):
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def students_lessons_finished(request):
+def get_students_lessons_finished(request):
     # get all that belong to the teacher
     teacher = request.user
     students = Student.objects.filter(teacher=teacher)

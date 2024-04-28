@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 
 from django.views import View
 
-from  .forms import CreateLessonForm, LoginForm, SettingsForm, CreateStudentForm, MusicLesson
+from  .forms import CreateLessonForm, LoginForm, SettingsForm, CreateStudentForm, CreateQuestionForm, MusicLesson
 
 from django.contrib import messages
 
@@ -67,6 +67,20 @@ def create_student(request):
             student = Student.objects.create(user=user, teacher=request.user, avatar_id=avatar_id)
             return redirect('students')
     return render(request, 'create_student.html', {'form': form})
+
+@login_required(login_url="/teacher/login/")
+def create_question(request):
+    form = CreateQuestionForm()
+
+    if request.method == 'POST':
+        form = CreateQuestionForm(request.POST)
+        teacher = request.user
+        form.instance.teacher = teacher
+        if form.is_valid():
+            form.save()
+            return render(request, 'create_question.html', {'form': form, 'success': 'Question created successfully'})
+    return render(request, 'create_question.html', {'form': form})
+
 
 @login_required(login_url="/teacher/login/")
 def lesson(request):

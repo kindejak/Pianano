@@ -6,8 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Pianano for techers{% endblock %}</title>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href={% static "4-5-2-bootstrap.min.css" %}>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" integrity="sha512-rt/SrQ4UNIaGfDyEXZtNcyWvQeOq0QLygHluFQcSjaGB04IxWhal71tKuzP6K8eYXYB6vJV4pHkXcmFGGQ1/0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <!-- Other common CSS and JavaScript imports can go here -->
 
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
@@ -15,11 +18,24 @@
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css"> 
     <link rel="stylesheet" href={% static "1-22-4-bootstrap-table.min.css" %}>
     <link rel="stylesheet" href={% static "dashboard.css" %}>
-    <script src={% static "3-5-1-jquery.min.js" %}></script>
-    <script src={% static "4-6-2-bootstrap.js" %}></script>
     <script src={% static "1-22-4-bootstrap-table.min.js" %}></script>
     <script src={% static "2-30-1-moment.min.js" %}></script>
     <script src={% static "4-4-2-chartjs.umd.min.js" %}></script>
+
+    <!-- bootstrap-multiselect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js" integrity="sha512-lxQ4VnKKW7foGFV6L9zlSe+6QppP9B2t+tMMaV4s4iqAv4iHIyXED7O+fke1VeLNaRdoVkVt8Hw/jmZ+XocsXQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.css" integrity="sha512-tlP4yGOtHdxdeW9/VptIsVMLtgnObNNr07KlHzK4B5zVUuzJ+9KrF86B/a7PJnzxEggPAMzoV/eOipZd8wWpag==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+
+  
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#id_questions').multiselect();
+        });
+    </script>
+    </script>
     <style>
         form .text-muted {
             color: #f5a623 !important;
@@ -35,7 +51,6 @@
                     <p class="text-white mt-5 mb-5">Welcome back, <b>{{ user.get_username }}</b> 🧑‍🏫</p>
                 </div>
             </div>
-            
     <div class="container">
         {% block content %}
         <!-- The content of individual pages will replace this block -->

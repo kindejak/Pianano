@@ -34,7 +34,7 @@ DEBUG = json.loads(os.getenv("DEBUG").lower())
 
 ALLOWED_HOSTS = ["localhost",os.getenv("ALLOWED_HOSTS")]
 
-
+X_FRAME_OPTIONS = "SAMEORIGIN"
 # Application definition
 
 INSTALLED_APPS = [
