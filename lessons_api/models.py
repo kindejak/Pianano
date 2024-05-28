@@ -46,7 +46,7 @@ class MusicLesson(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     questions = models.ManyToManyField(Question)
     xp = models.IntegerField()
-    slug = models.SlugField(max_length=40,null=True,unique=True)
+    slug = models.SlugField(max_length=40,unique=True)
     is_public = models.BooleanField(default=False)
 
     def __str__(self):

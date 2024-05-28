@@ -15,5 +15,5 @@ urlpatterns = [
     path('students-time-spent/', students_time_spent, name='students_time_spent'),
     path('students-lessons-finished/', get_students_lessons_finished, name='students_lessons_finished'),
     path('students-from-teacher/', get_students, name='students_from_teacher'),
-    path('update_student_lesson',update_student_lesson)
+    path('update-student-lesson/',update_student_lesson)
 ]

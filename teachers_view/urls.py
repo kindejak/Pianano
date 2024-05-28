@@ -11,7 +11,6 @@ urlpatterns = [
     path('lessons/', lesson, name='lessons'),
     path('lessons/<int:id>/edit/', create_lesson),
     path('lessons/<int:id>/delete/', delete_lesson),
-    path('lessons/edit/', edit_lesson),
     path('lessons/create/', create_lesson, name='create_lesson'),
     path('students/', students, name='students'),
     path('students/create/', create_student, name='create_student'),

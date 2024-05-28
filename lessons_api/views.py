@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from .models import MusicLesson, Question, Student
+from .models import MusicLesson, Question, Student, PianoClass, StudentLesson
 from django.contrib.auth.models import User
 from .serializers import LessonSerializer, LessonDetailSerializer, QuestionSerializer, StudentSerializer
 # Create your views here.
@@ -23,12 +23,22 @@ def update_student_lesson(request):
     # {"time_spent": time_spent, "answerd_questions": answerd_questions, "right_answers": right_answers, "is_finished": 1,"date_finished":date_finished,"time_finished":time_finished}, headers={"Content-Type": "application/json"})
     # get student
     user = request.user
-    student = Student.objects.get(user=user)
+    if not Student.objects.filter(user=user).exists():
+        return Response({'error':'User is not a student'})
+    student = Student.objects.filter(user=user)
     # get lesson
-    lesson_id = request.data.get('lesson_id')
-    lesson = MusicLesson.objects.get(id=lesson_id)
+    slug = request.data.get('slug')
+    try:
+        print(slug)
+        lesson = MusicLesson.objects.get(slug=slug)
+    except:
+        return Response({'error':'Lesson not found'}, status=404)
     # get student lesson
-    student_lesson = student.studentlesson_set.get(music_lesson=lesson)
+    if StudentLesson.objects.filter(student=student, music_lesson=lesson).first() is None:
+        #create student lesson
+        student_lesson = StudentLesson.objects.create(student=student, music_lesson=lesson)
+    else:
+        student_lesson = StudentLesson.objects.get(student=student, music_lesson=lesson)
     # update student lesson
     student_lesson.time_spent = request.data.get('time_spent')
     student_lesson.answerd_questions = request.data.get('answerd_questions')
@@ -72,13 +82,79 @@ def register(request):
 def test_token(request):
     return Response({'message':'test_token'})
 
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 class LessonAPIView(generics.ListAPIView):
-    queryset = MusicLesson.objects.all()
     serializer_class = LessonSerializer
+    quearyset = None
 
+    def get(self, request):
+        print(request.user)
+        print(request.headers)
+        data = MusicLesson.objects.filter(is_public=True)
+        if request.user.is_authenticated:
+            student = Student.objects.get(user=request.user)
+            print(student)
+            classes = PianoClass.objects.filter(students = student)
+            for c in classes:
+                data = data | c.lessons.all()
+            self.queryset = data
+            return super().get(request)
+        else:
+            # return only public lessons
+            self.queryset = data
+            return super().get(request)
+
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 class LessonDetailAPIView(generics.RetrieveAPIView):
     queryset = MusicLesson.objects.all()
     serializer_class = LessonDetailSerializer
+    # TODO: add permission to only allow students to see lessons that belong to their teacher
+
+    def get(self, request, pk):
+        lesson = get_object_or_404(MusicLesson, pk=pk)
+        if lesson.is_public:
+            return super().get(request, pk)
+        else:
+            student = Student.objects.get(user=request.user)
+            classes = PianoClass.objects.filter(students = student)
+            for c in classes:
+                if lesson in c.lessons.all():
+                    return super().get(request, pk)
+            return Response({'error':'Lesson not found'})
+    
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@api_view(['PUT'])
+def update_student_lesson(request):
+    # {"time_spent": time_spent, "answerd_questions": answerd_questions, "right_answers": right_answers, "is_finished": 1,"date_finished":date_finished,"time_finished":time_finished}, headers={"Content-Type": "application/json"})
+    # get student
+    user = request.user
+    if not Student.objects.filter(user=user).exists():
+        return Response({'error':'User is not a student'})
+    student = Student.objects.filter(user=user)
+    # get lesson
+    slug = request.data.get('slug')
+    try:
+        print(slug)
+        lesson = MusicLesson.objects.get(slug=slug)
+    except:
+        return Response({'error':'Lesson not found'}, status=404)
+    # get student lesson
+    if StudentLesson.objects.filter(student=student, music_lesson=lesson).first() is None:
+        #create student lesson
+        student_lesson = StudentLesson.objects.create(student=student, music_lesson=lesson)
+    else:
+        student_lesson = StudentLesson.objects.get(student=student, music_lesson=lesson)
+    # update student lesson
+    student_lesson.time_spent = request.data.get('time_spent')
+    student_lesson.answerd_questions = request.data.get('answerd_questions')
+    student_lesson.right_answers = request.data.get('right_answers')
+    student_lesson.is_finished = request.data.get('is_finished')
+    student_lesson.date_finished = request.data.get('date_finished')
+    student_lesson.time_finished = request.data.get('time_finished')
+    student_lesson.save()
+    return Response({'message':'Student lesson updated'})
+
+
 
 class QuestionAPIView(generics.ListAPIView):
     queryset = Question.objects.all()
