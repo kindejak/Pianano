@@ -91,7 +91,7 @@ class LessonAPIView(generics.ListAPIView):
         print(request.user)
         print(request.headers)
         data = MusicLesson.objects.filter(is_public=True)
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and Student.objects.filter(user=request.user).exists():
             student = Student.objects.get(user=request.user)
             print(student)
             classes = PianoClass.objects.filter(students = student)

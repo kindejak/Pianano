@@ -36,6 +36,16 @@ def hello(request):
             'finished': student_lesson.date_finished,
         })
     context['student_lessons'] = context_lessons
+
+    students = []
+    for student in Student.objects.filter(teacher=request.user):
+        students.append({
+            'username': student.user.username,
+            'avatar_id': student.avatar_id,
+            'xp': student.xp,
+            'streak': student.streak,
+        })
+    context['students'] = students
     print(context)
     return render(request, 'dashboard.html', context)
 
@@ -176,7 +186,7 @@ def login_page(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return render(request, 'dashboard.html')
+                return redirect('dashboard')
             else:
                 return render(request, 'login.html', {'form': form, 'error': 'Invalid username or password'})
     return render(request, 'login.html', {'form': form})
