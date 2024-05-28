@@ -18,14 +18,15 @@ from .serializers import LessonSerializer, LessonDetailSerializer, QuestionSeria
 # Create your views here.
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 def update_student_lesson(request):
     # {"time_spent": time_spent, "answerd_questions": answerd_questions, "right_answers": right_answers, "is_finished": 1,"date_finished":date_finished,"time_finished":time_finished}, headers={"Content-Type": "application/json"})
     # get student
     user = request.user
     if not Student.objects.filter(user=user).exists():
         return Response({'error':'User is not a student'})
-    student = Student.objects.filter(user=user)
+    student = Student.objects.get(user=user)
     # get lesson
     slug = request.data.get('slug')
     try:
@@ -40,12 +41,20 @@ def update_student_lesson(request):
     else:
         student_lesson = StudentLesson.objects.get(student=student, music_lesson=lesson)
     # update student lesson
+
     student_lesson.time_spent = request.data.get('time_spent')
     student_lesson.answerd_questions = request.data.get('answerd_questions')
     student_lesson.right_answers = request.data.get('right_answers')
     student_lesson.is_finished = request.data.get('is_finished')
-    student_lesson.date_finished = request.data.get('date_finished')
-    student_lesson.time_finished = request.data.get('time_finished')
+    datetime = request.data.get('date_finished') + ' ' + request.data.get('time_finished')
+    student_lesson.datetime_finished = datetime
+
+    student_lesson.save()
+    # update student xp
+    if student_lesson.is_finished:
+        student.xp += lesson.xp
+        student.save()
+    return Response({'message':'Student lesson updated'})
 
 
    
@@ -122,37 +131,7 @@ class LessonDetailAPIView(generics.RetrieveAPIView):
                     return super().get(request, pk)
             return Response({'error':'Lesson not found'})
     
-@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
-@api_view(['PUT'])
-def update_student_lesson(request):
-    # {"time_spent": time_spent, "answerd_questions": answerd_questions, "right_answers": right_answers, "is_finished": 1,"date_finished":date_finished,"time_finished":time_finished}, headers={"Content-Type": "application/json"})
-    # get student
-    user = request.user
-    if not Student.objects.filter(user=user).exists():
-        return Response({'error':'User is not a student'})
-    student = Student.objects.filter(user=user)
-    # get lesson
-    slug = request.data.get('slug')
-    try:
-        print(slug)
-        lesson = MusicLesson.objects.get(slug=slug)
-    except:
-        return Response({'error':'Lesson not found'}, status=404)
-    # get student lesson
-    if StudentLesson.objects.filter(student=student, music_lesson=lesson).first() is None:
-        #create student lesson
-        student_lesson = StudentLesson.objects.create(student=student, music_lesson=lesson)
-    else:
-        student_lesson = StudentLesson.objects.get(student=student, music_lesson=lesson)
-    # update student lesson
-    student_lesson.time_spent = request.data.get('time_spent')
-    student_lesson.answerd_questions = request.data.get('answerd_questions')
-    student_lesson.right_answers = request.data.get('right_answers')
-    student_lesson.is_finished = request.data.get('is_finished')
-    student_lesson.date_finished = request.data.get('date_finished')
-    student_lesson.time_finished = request.data.get('time_finished')
-    student_lesson.save()
-    return Response({'message':'Student lesson updated'})
+
 
 
 

@@ -69,8 +69,7 @@ class StudentLesson(models.Model):
     answerd_questions = models.IntegerField(default=0)
     right_answers = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
-    date_finished = models.DateTimeField(null=True)
-    time_finished = models.DateTimeField(null=True)
+    datetime_finished = models.DateTimeField(null=True)
     deadline = models.DateTimeField(null=True)
 
     def __str__(self):

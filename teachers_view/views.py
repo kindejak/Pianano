@@ -22,9 +22,9 @@ def hello(request):
     students = Student.objects.filter(teacher=request.user)
     student_lessons = []
     for student in students:
-        student_lessons += student.studentlesson_set.filter(is_finished=True).order_by('-date_finished')
+        student_lessons += student.studentlesson_set.filter(is_finished=True).order_by('-datetime_finished')
     # sort by date_finished
-    student_lessons = sorted(student_lessons, key=lambda x: x.date_finished, reverse=True)
+    student_lessons = sorted(student_lessons, key=lambda x: x.datetime_finished, reverse=True)
     student_lessons = student_lessons[:5]
     context_lessons = []
     for student_lesson in student_lessons:
@@ -33,7 +33,7 @@ def hello(request):
             'student': student.user.username,
             'avatar_id': student.avatar_id,
             'time_spent': student_lesson.time_spent,
-            'finished': student_lesson.date_finished,
+            'finished': student_lesson.datetime_finished,
         })
     context['student_lessons'] = context_lessons
 
