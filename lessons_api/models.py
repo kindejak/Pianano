@@ -4,6 +4,9 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+
+
+from datetime import datetime, timedelta
 # Create your models here.
 # token
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -22,6 +25,27 @@ class Student(models.Model):
         if self.user:
             return self.user.username
         return 'None'
+    def update_streak(self):
+        #calculate streak if student has finished lessons every day
+        lessons = self.studentlesson_set.filter(is_finished=True).order_by('-datetime_finished')
+        if lessons.count() == 0:
+            self.streak = 0
+            self.save()
+            return
+        last_lesson = lessons[0]
+        last_lesson_date = last_lesson.datetime_finished
+        today = datetime.now()
+        if today - last_lesson_date > timedelta(days=1):
+            self.streak = 0
+            self.save()
+            return
+        streak = 1
+        for i in range(1, lessons.count()):
+            if lessons[i].datetime_finished - lessons[i-1].datetime_finished > timedelta(days=1):
+                break
+            streak += 1
+        return
+
   
 class Question(models.Model):
     QUESTION_TYPES = [

@@ -15,6 +15,14 @@ from lessons_api.models import StudentLesson, Student
 from django.contrib.auth.models import User
 
 
+
+
+
+def update_all_streaks():
+    students = Student.objects.all()
+    for student in students:
+        student.update_streak()
+
 @login_required(login_url="/teacher/login/")
 def hello(request):
     context = {}
@@ -47,6 +55,7 @@ def hello(request):
         })
     context['students'] = students
     print(context)
+    update_all_streaks()
     return render(request, 'dashboard.html', context)
 
 
