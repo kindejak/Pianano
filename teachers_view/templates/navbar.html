@@ -24,6 +24,12 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link {% if url_name == 'classes' %}active{% endif %}" href="{% url 'classes' %}">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        Classes
+                    </a>
+
+                <li class="nav-item">
                     <a class="nav-link {% if url_name == 'students' %}active{% endif %}" href="{% url 'students' %}">
                         <i class="far fa-user"></i>
                         Students

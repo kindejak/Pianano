@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 
 from django.views import View
 
-from  .forms import CreateLessonForm, LoginForm, SettingsForm, CreateStudentForm, CreateQuestionForm, MusicLesson
+from  .forms import CreateLessonForm, LoginForm, SettingsForm, CreateStudentForm, CreateQuestionForm, MusicLesson, CreateClassForm
 
 from django.contrib import messages
 
@@ -150,9 +150,6 @@ def create_lesson(request, id=None):
         else:
             return render(request, 'create_lesson.html', {'form': form, 'error': 'Invalid data'})
 
-
-    
-
     if request.method == 'POST':
         form = CreateLessonForm(request.POST)
         # set teacher to the current user
@@ -164,6 +161,23 @@ def create_lesson(request, id=None):
             return render(request, 'create_lesson.html',{'form': form, 'error':'Invalid data'} )
     
     return render(request, 'create_lesson.html', {'form': form})
+
+
+
+def create_class(request):
+    form = CreateClassForm()
+    if request.method == 'GET':
+        return render(request, 'create_class.html', {'form': form})
+    if request.method == 'POST':
+        form = CreateClassForm(request.POST)
+        # set teacher to the current user
+        form.instance.teacher = request.user
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+        else:
+            return render(request, 'create_class.html', {'form': form, 'error': 'Invalid data'})
+        
 
 @login_required(login_url="/teacher/login/")
 def settings_page(request):

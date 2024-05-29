@@ -27,6 +27,10 @@ class SettingsForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
 
+class CreateClassForm(forms.Form):
+    name = forms.CharField()
+    students = forms.ModelMultipleChoiceField(queryset=Student.objects.all())
+    lessons = forms.ModelMultipleChoiceField(queryset=MusicLesson.objects.all())
 
 class LoginForm(forms.Form):
     username = forms.CharField()

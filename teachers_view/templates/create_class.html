@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Create Lesson{% endblock %}
+
+{% block content %}
+    <center>
+        <h1>Create Class</h1>
+    </center>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.name|as_crispy_field }}
+        {{ form.students|as_crispy_field }}
+        {{ form.lessons|as_crispy_field }}
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Create Class
+        </button>        
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}
