@@ -1,4 +1,4 @@
-from lessons_api.models import MusicLesson, Question, Student
+from lessons_api.models import MusicLesson, Question, Student, PianoClass
 from django.contrib.auth.models import User
 from django import forms
 
@@ -27,10 +27,10 @@ class SettingsForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
 
-class CreateClassForm(forms.Form):
-    name = forms.CharField()
-    students = forms.ModelMultipleChoiceField(queryset=Student.objects.all())
-    lessons = forms.ModelMultipleChoiceField(queryset=MusicLesson.objects.all())
+class CreateClassForm(forms.ModelForm):
+    class Meta:
+        model = PianoClass
+        fields = ['name', 'students', 'lessons']
 
 class LoginForm(forms.Form):
     username = forms.CharField()

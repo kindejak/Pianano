@@ -162,8 +162,7 @@ def create_lesson(request, id=None):
     
     return render(request, 'create_lesson.html', {'form': form})
 
-
-
+@login_required(login_url="/teacher/login/")
 def create_class(request):
     form = CreateClassForm()
     if request.method == 'GET':
@@ -176,7 +175,10 @@ def create_class(request):
             form.save()
             return redirect('dashboard')
         else:
+            print(form.errors)
             return render(request, 'create_class.html', {'form': form, 'error': 'Invalid data'})
+        
+    return render(request, 'create_class.html', {'form': form})
         
 
 @login_required(login_url="/teacher/login/")
