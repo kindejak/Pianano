@@ -27,26 +27,30 @@ class Student(models.Model):
         return 'None'
     def update_streak(self):
         #calculate streak if student has finished lessons every day
-        lessons = self.studentlesson_set.filter(is_finished=True).order_by('-datetime_finished')
-        if lessons.count() == 0:
+        if self.studentlesson_set.filter(is_finished=True).count() == 0:
             self.streak = 0
             self.save()
             return
-        last_lesson = lessons[0]
-        last_lesson_date = last_lesson.datetime_finished
-        today = datetime.now()
+        last_lesson = self.studentlesson_set.filter(is_finished=True).order_by('-datetime_finished')[0]
+        last_lesson_date = last_lesson.datetime_finished.date()
+        today = datetime.now().date()
         if today - last_lesson_date > timedelta(days=1):
             self.streak = 0
             self.save()
             return
-        streak = 1
-        for i in range(1, lessons.count()):
-            if lessons[i].datetime_finished - lessons[i-1].datetime_finished > timedelta(days=1):
-                break
-            streak += 1
-        return
-
-  
+        
+        # if first lesson was finished today
+        try:
+            before_last_lesson = self.studentlesson_set.filter(is_finished=True).order_by('-datetime_finished')[1]
+        except IndexError:
+            self.streak = 1
+            self.save()
+            return
+        if today == last_lesson_date and before_last_lesson.datetime_finished.date() != today:
+            self.streak += 1
+            self.save()
+            return
+        
 class Question(models.Model):
     QUESTION_TYPES = [
         ('NI','Note idetification'),
